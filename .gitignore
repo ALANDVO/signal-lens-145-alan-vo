@@ -1,0 +1,58 @@
+# Dependencies
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+frontend/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+backend/signal_lens.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+pytest_cache/
+.vitest/
+
+# Agent metadata (local only)
+.antigravitycli/
+.omp/
+
+# Uploads
+backend/uploads/
+
+# Docker
+docker-compose.override.yml

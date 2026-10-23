@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "signal-lens-145-alan-vo",
+  "owner": "ALANDVO",
+  "email": "alanvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "summary": "Work in progress: signal-lens-145-alan-vo",
+  "workflows": [
+    "Upload time-series signals (CSV/JSON/NPY) and run multi-method anomaly detection analysis",
+    "Visualize signal analyses with anomaly counts, timestamps, and export results as JSON/CSV",
+    "Secure OIDC authentication via Keycloak with role-based access control and audit logging"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "status": "work-in-progress"
+}
