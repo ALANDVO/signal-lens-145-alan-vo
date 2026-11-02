@@ -10,9 +10,9 @@ vi.mock('../stores/authStore', () => ({
 
 vi.mock('../api/client', () => ({
   authApi: {
-    me: vi.fn(),
+    me: vi.fn().mockResolvedValue({ id: 1, email: 'test@example.com', name: 'Test User', role: 'viewer' }),
     logout: vi.fn(),
-    loginUrl: '/api/auth/login',
+    loginUrl: vi.fn(() => '/api/auth/login'),
   },
 }))
 
@@ -29,6 +29,8 @@ describe('App Routing', () => {
       setLoading: vi.fn(),
       logout: vi.fn(),
     })
+    // Mock window.location to prevent redirect
+    vi.stubGlobal('location', { href: '/', assign: vi.fn(), replace: vi.fn() })
   })
 
   it('redirects to login when not authenticated', () => {

@@ -4,17 +4,17 @@ import UploadPage from '../pages/Upload'
 import { signalsApi } from '../api/client'
 import { useSignalStore } from '../stores/signalStore'
 import { useAuthStore } from '../stores/authStore'
+import { renderWithRouter } from './setup'
 
-const { toast } = vi.hoisted(() => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}))
+const mockToast = {
+  success: vi.fn(),
+  error: vi.fn(),
+}
 
 vi.mock('react-hot-toast', () => ({
-  toast,
+  toast: mockToast,
   Toaster: () => null,
+  default: mockToast,
 }))
 
 vi.mock('../api/client', () => ({
@@ -45,97 +45,62 @@ describe('UploadPage', () => {
     mockUseAuthStore.mockReturnValue({
       user: { id: 1, email: 'test@example.com', name: 'Test User', role: 'viewer' },
       isAuthenticated: true,
-      isLoading: false,
-      setUser: vi.fn(),
-      setLoading: vi.fn(),
-      logout: vi.fn(),
     })
     mockUseSignalStore.mockReturnValue({
-      signals: [],
-      currentSignal: null,
-      analyses: [],
-      currentAnalysis: null,
-      pagination: { total: 0, skip: 0, limit: 50 },
-      isLoading: false,
-      error: null,
-      setSignals: vi.fn(),
-      setCurrentSignal: vi.fn(),
-      setAnalyses: vi.fn(),
-      setCurrentAnalysis: vi.fn(),
-      setLoading: vi.fn(),
-      setError: vi.fn(),
+      uploadSignal: vi.fn(),
+      clearError: vi.fn(),
       addSignal: vi.fn(),
-      removeSignal: vi.fn(),
     })
   })
 
   it('renders upload form', () => {
-    render(<UploadPage />)
-
-    expect(screen.getByRole('heading', { name: 'Upload Signal' })).toBeInTheDocument()
+    renderWithRouter(<UploadPage />)
+    expect(screen.getByText('Upload Signal')).toBeInTheDocument()
     expect(screen.getByLabelText('Signal Name *')).toBeInTheDocument()
     expect(screen.getByLabelText('Sample Rate (Hz) *')).toBeInTheDocument()
     expect(screen.getByLabelText('Duration (seconds) *')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Upload Signal' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Channels')).toBeInTheDocument()
+    expect(screen.getByLabelText('Description')).toBeInTheDocument()
+    expect(screen.getByText('Drop your signal file here or click to browse')).toBeInTheDocument()
   })
 
   it('shows error when submitting without file', async () => {
-    render(<UploadPage />)
-
-    fireEvent.click(screen.getByRole('button', { name: 'Upload Signal' }))
-
+    renderWithRouter(<UploadPage />)
+    fireEvent.click(screen.getByRole('button', { name: /upload signal/i }))
     await waitFor(() => {
-      expect(mockSignalsApi.upload).not.toHaveBeenCalled()
+      expect(mockToast.error).toHaveBeenCalledWith('Please select a file')
     })
   })
 
   it('validates file type', async () => {
-    render(<UploadPage />)
-
-    const file = new File(['test'], 'test.txt', { type: 'text/plain' })
-    const dataTransfer = new DataTransfer()
-    dataTransfer.items.add(file)
-
-    const dropZone = screen.getByText('Drop your signal file here or click to browse').closest('div')
-    fireEvent.drop(dropZone!, { dataTransfer })
-
-    fireEvent.click(screen.getByRole('button', { name: 'Upload Signal' }))
-
+    renderWithRouter(<UploadPage />)
+    const file = new File(['test content'], 'test.txt', { type: 'text/plain' })
+    const input = screen.getByTestId('file-input')
+    fireEvent.change(input, { target: { files: [file] } })
+    fireEvent.click(screen.getByRole('button', { name: /upload signal/i }))
     await waitFor(() => {
-      expect(mockSignalsApi.upload).not.toHaveBeenCalled()
+      expect(mockToast.error).toHaveBeenCalledWith('File must be CSV, JSON, or NPY format')
     })
   })
 
   it('uploads signal successfully', async () => {
-    const mockSignal = {
-      id: 1,
-      name: 'Test Signal',
-      sample_rate: 1000,
-      duration_seconds: 10,
-      channels: 1,
-      description: 'Test',
-      created_at: new Date().toISOString(),
-    }
-
-    mockSignalsApi.upload.mockResolvedValue(mockSignal)
-
-    render(<UploadPage />)
-
+    renderWithRouter(<UploadPage />)
+    const file = new File(['time,value\n0,1\n1,2'], 'test.csv', { type: 'text/csv' })
+    const input = screen.getByTestId('file-input')
+    fireEvent.change(input, { target: { files: [file] } })
     fireEvent.change(screen.getByLabelText('Signal Name *'), { target: { value: 'Test Signal' } })
     fireEvent.change(screen.getByLabelText('Sample Rate (Hz) *'), { target: { value: '1000' } })
     fireEvent.change(screen.getByLabelText('Duration (seconds) *'), { target: { value: '10' } })
+    fireEvent.change(screen.getByLabelText('Channels'), { target: { value: '1' } })
 
-    const file = new File(['test data'], 'test.csv', { type: 'text/csv' })
-    const dataTransfer = new DataTransfer()
-    dataTransfer.items.add(file)
+    mockSignalsApi.upload.mockResolvedValue({ id: 1, name: 'Test Signal' })
 
-    const dropZone = screen.getByText('Drop your signal file here or click to browse').closest('div')
-    fireEvent.drop(dropZone!, { dataTransfer })
-
-    fireEvent.click(screen.getByText('Upload Signal'))
-
+    fireEvent.click(screen.getByRole('button', { name: /upload signal/i }))
     await waitFor(() => {
       expect(mockSignalsApi.upload).toHaveBeenCalled()
+    })
+    await waitFor(() => {
+      expect(mockToast.success).toHaveBeenCalledWith('Signal uploaded successfully!')
     })
   })
 })

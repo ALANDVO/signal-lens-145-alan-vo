@@ -56,3 +56,10 @@ backend/uploads/
 
 # Docker
 docker-compose.override.yml
+venv/
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm

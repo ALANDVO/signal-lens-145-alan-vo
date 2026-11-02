@@ -111,7 +111,7 @@ export default function UploadPage() {
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
-          <input type="file" id="file" onChange={handleFileChange} className="hidden" accept=".csv,.json,.npy" />
+          <input type="file" id="file" onChange={handleFileChange} className="hidden" accept=".csv,.json,.npy" data-testid="file-input" />
           <label htmlFor="file" className="cursor-pointer">
             <Upload className="mx-auto w-12 h-12 text-gray-400 mb-4" />
             <p className="text-lg font-medium text-gray-900 mb-1">Drop your signal file here or click to browse</p>
