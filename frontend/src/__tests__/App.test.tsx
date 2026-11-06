@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import App from '../App'
 import { useAuthStore } from '../stores/authStore'
+import { renderWithRouter } from './setup'
 
 vi.mock('../stores/authStore', () => ({
   useAuthStore: vi.fn(),
@@ -29,16 +30,10 @@ describe('App Routing', () => {
       setLoading: vi.fn(),
       logout: vi.fn(),
     })
-    // Mock window.location to prevent redirect
-    vi.stubGlobal('location', { href: '/', assign: vi.fn(), replace: vi.fn() })
   })
 
   it('redirects to login when not authenticated', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    )
+    renderWithRouter(<App />)
 
     expect(screen.getByText('Signal Lens')).toBeInTheDocument()
     expect(screen.getByText('Redirecting to authentication...')).toBeInTheDocument()
@@ -54,11 +49,7 @@ describe('App Routing', () => {
       logout: vi.fn(),
     })
 
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    )
+    renderWithRouter(<App />)
 
     await waitFor(() => {
       expect(screen.getByText('Dashboard')).toBeInTheDocument()
@@ -77,11 +68,7 @@ describe('Authentication Flow', () => {
       logout: vi.fn(),
     })
 
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    )
+    renderWithRouter(<App />)
 
     expect(screen.getByText('Redirecting to authentication...')).toBeInTheDocument()
   })
