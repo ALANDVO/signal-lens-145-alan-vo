@@ -50,3 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - HttpOnly, SameSite=Lax session cookies
 - CSRF protection on state-changing operations
 - Role-based authorization on all data endpoints
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)
