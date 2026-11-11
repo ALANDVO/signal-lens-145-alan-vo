@@ -1,8 +1,27 @@
 # Changelog
 
+## 1.3.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.2.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
+
+### Fixed
+- Frontend test suite stabilized: all 8 tests pass
+- Upload.test.tsx: fixed duplicate text match (used getByRole for heading)
+- Upload.test.tsx: added required field inputs (name, sampleRate, duration) for upload test
+- SignalList.test.tsx: added complete mock including setLoading for delete test
+- App.test.tsx: fixed login redirect test (isLoading=false to render Login page)
+- react-hot-toast mock: fixed default export in vi.mock for proper toast import
+
+### Security
+- No hardcoded secrets; all configuration via environment variables
+- Secure OIDC flow with state, nonce, and PKCE
+- HttpOnly, SameSite=Lax session cookies
+- CSRF protection on state-changing operations
+- Role-based authorization on all data endpoints
 
 ## 1.1.0 — work-in-progress checkpoint
 

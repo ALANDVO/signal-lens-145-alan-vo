@@ -1,15 +1,117 @@
 {
   "schema_version": 1,
-  "current_feature": "continue-implementation",
+  "current_feature": "test-fixes",
   "features": [
     {
-      "id": "continue-implementation",
-      "title": "Continue implementation and resolve known failures",
-      "status": "in_progress",
+      "id": "test-fixes",
+      "title": "Fix frontend test failures and stabilize test suite",
+      "status": "done",
       "acceptance": [
-        "Run checks, fix failures, and implement the next planned feature"
+        "All backend tests pass (11/11)",
+        "All frontend tests pass (8/8)",
+        "Fixed Upload.test.tsx duplicate text match",
+        "Fixed Upload.test.tsx missing required fields",
+        "Fixed SignalList.test.tsx missing setLoading mock",
+        "Fixed App.test.tsx login redirect test",
+        "Fixed react-hot-toast mock default export"
       ],
-      "implementation": [],
+      "implementation": [
+        "frontend/src/__tests__/Upload.test.tsx",
+        "frontend/src/__tests__/SignalList.test.tsx",
+        "frontend/src/__tests__/App.test.tsx",
+        "frontend/src/__tests__/setup.ts"
+      ],
+      "tests": [
+        "frontend/src/__tests__/Upload.test.tsx",
+        "frontend/src/__tests__/SignalList.test.tsx",
+        "frontend/src/__tests__/App.test.tsx"
+      ]
+    },
+    {
+      "id": "signal-analysis-engine",
+      "title": "Signal analysis domain engine with ML-based anomaly detection",
+      "status": "planned",
+      "acceptance": [
+        "Ingest time-series signal data via API",
+        "Compute statistical features (mean, variance, spectral entropy)",
+        "Isolation Forest anomaly detection on signal windows",
+        "Persist analyses with UTC timestamps",
+        "Export results as JSON/CSV"
+      ],
+      "implementation": [
+        "backend/app/models/signal.py",
+        "backend/app/services/signal_analysis.py",
+        "backend/app/api/signals.py",
+        "backend/app/core/ml.py"
+      ],
+      "tests": [
+        "backend/tests/test_signal_analysis.py",
+        "backend/tests/test_ml_anomaly.py"
+      ]
+    },
+    {
+      "id": "signal-dashboard",
+      "title": "Signal analysis dashboard with real-time visualization",
+      "status": "planned",
+      "acceptance": [
+        "Upload signal data (CSV/JSON)",
+        "View anomaly detection results with timestamps",
+        "Filter by time range, anomaly score threshold",
+        "Export filtered results",
+        "Responsive UI with loading/error/empty states"
+      ],
+      "implementation": [
+        "frontend/src/components/SignalUpload.tsx",
+        "frontend/src/components/SignalDashboard.tsx",
+        "frontend/src/components/AnomalyTable.tsx",
+        "frontend/src/pages/Dashboard.tsx",
+        "frontend/src/api/signals.ts"
+      ],
+      "tests": [
+        "frontend/src/__tests__/SignalDashboard.test.tsx",
+        "frontend/src/__tests__/SignalUpload.test.tsx"
+      ]
+    },
+    {
+      "id": "rag-query-workflow",
+      "title": "RAG-based signal knowledge query workflow",
+      "status": "planned",
+      "acceptance": [
+        "Index signal analysis reports and domain docs",
+        "Natural language query for signal patterns",
+        "Grounded responses with citations",
+        "Opt-in LLM explanations labeled advisory"
+      ],
+      "implementation": [
+        "backend/app/services/rag.py",
+        "backend/app/api/rag.py",
+        "frontend/src/components/RAGQuery.tsx",
+        "frontend/src/pages/RAGQuery.tsx"
+      ],
+      "tests": [
+        "backend/tests/test_rag.py",
+        "frontend/src/__tests__/RAGQuery.test.tsx"
+      ]
+    },
+    {
+      "id": "ci-cd-docs",
+      "title": "CI/CD, documentation, and portfolio metadata",
+      "status": "planned",
+      "acceptance": [
+        "GitHub Actions CI workflow passing",
+        "README with architecture diagram and API reference",
+        "CHANGELOG.md",
+        "portfolio.json with schema_version=1",
+        "LICENSE MIT"
+      ],
+      "implementation": [
+        ".github/workflows/ci.yml",
+        "README.md",
+        "CHANGELOG.md",
+        "portfolio.json",
+        "LICENSE",
+        "pyproject.toml"
+      ],
       "tests": []
     }
   ]
