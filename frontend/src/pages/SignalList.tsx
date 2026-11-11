@@ -134,7 +134,7 @@ export default function SignalListPage() {
                               onClick={() => handleDelete(signal.id)}
                               disabled={deletingId === signal.id}
                               className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                              title="Delete"
+                              aria-label={`Delete ${signal.name}`}
                             >
                               {deletingId === signal.id ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />

@@ -58,17 +58,31 @@ global.File = class File extends originalFile {
   }
 } as unknown as typeof File
 
+// Mock window.confirm for delete tests
+Object.defineProperty(window, 'confirm', {
+  writable: true,
+  value: vi.fn(() => true),
+})
+
 afterEach(() => {
   cleanup()
 })
 
-vi.mock('react-hot-toast', () => ({
-  toast: {
+vi.mock('react-hot-toast', async () => {
+  const mockToast = {
     success: vi.fn(),
     error: vi.fn(),
-  },
-  Toaster: () => null,
-}))
+    loading: vi.fn(),
+    dismiss: vi.fn(),
+    promise: vi.fn(),
+  }
+  return {
+    __esModule: true,
+    default: mockToast,
+    toast: mockToast,
+    Toaster: () => null,
+  }
+})
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

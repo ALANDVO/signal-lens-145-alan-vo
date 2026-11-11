@@ -72,14 +72,14 @@ describe('SignalListPage', () => {
   it('renders signal list with empty state', () => {
     renderWithRouter(<SignalListPage />)
 
-    expect(screen.getByText('No signals uploaded yet')).toBeInTheDocument()
+    expect(screen.getByText('No signals found')).toBeInTheDocument()
     expect(screen.getByText('Upload your first signal to get started')).toBeInTheDocument()
   })
 
   it('renders signal list with data', () => {
     const mockSignals = [
-      { id: 1, name: 'Signal 1', fileType: 'csv', fileSize: 1024, sampleRate: 1000, duration: 10, createdAt: '2024-01-01T00:00:00Z', ownerId: 1 },
-      { id: 2, name: 'Signal 2', fileType: 'json', fileSize: 2048, sampleRate: 2000, duration: 5, createdAt: '2024-01-02T00:00:00Z', ownerId: 1 },
+      { id: 1, name: 'Signal 1', sample_rate: 1000, duration_seconds: 10, channels: 1, created_at: '2024-01-01T00:00:00Z' },
+      { id: 2, name: 'Signal 2', sample_rate: 2000, duration_seconds: 5, channels: 1, created_at: '2024-01-02T00:00:00Z' },
     ]
     mockUseSignalStore.mockReturnValue({
       ...mockUseSignalStore.mock.results[0]?.value,
@@ -91,18 +91,29 @@ describe('SignalListPage', () => {
 
     expect(screen.getByText('Signal 1')).toBeInTheDocument()
     expect(screen.getByText('Signal 2')).toBeInTheDocument()
-    expect(screen.getByText('csv')).toBeInTheDocument()
-    expect(screen.getByText('json')).toBeInTheDocument()
+    expect(screen.getByText('1,000 Hz')).toBeInTheDocument()
+    expect(screen.getByText('2,000 Hz')).toBeInTheDocument()
   })
 
   it('deletes signal', async () => {
     const mockSignals = [
-      { id: 1, name: 'Signal 1', fileType: 'csv', fileSize: 1024, sampleRate: 1000, duration: 10, createdAt: '2024-01-01T00:00:00Z', ownerId: 1 },
+      { id: 1, name: 'Signal 1', sample_rate: 1000, duration_seconds: 10, channels: 1, created_at: '2024-01-01T00:00:00Z' },
     ]
     mockUseSignalStore.mockReturnValue({
-      ...mockUseSignalStore.mock.results[0]?.value,
       signals: mockSignals,
       pagination: { page: 1, pageSize: 10, total: 1, totalPages: 1 },
+      isLoading: false,
+      error: null,
+      setSignals: vi.fn(),
+      setLoading: vi.fn(),
+      setError: vi.fn(),
+      setPagination: vi.fn(),
+      addSignal: vi.fn(),
+      deleteSignal: vi.fn(),
+      currentSignal: null,
+      analyses: [],
+      setCurrentSignal: vi.fn(),
+      setAnalyses: vi.fn(),
     })
     mockSignalsApi.delete.mockResolvedValue(undefined)
 
@@ -110,9 +121,6 @@ describe('SignalListPage', () => {
 
     const deleteButton = screen.getByRole('button', { name: /delete signal 1/i })
     fireEvent.click(deleteButton)
-
-    const confirmButton = screen.getByRole('button', { name: /confirm/i })
-    fireEvent.click(confirmButton)
 
     await waitFor(() => {
       expect(mockSignalsApi.delete).toHaveBeenCalledWith(1)

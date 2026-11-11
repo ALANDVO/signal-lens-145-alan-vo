@@ -62,7 +62,7 @@ describe('Authentication Flow', () => {
     mockUseAuthStore.mockReturnValue({
       user: null,
       isAuthenticated: false,
-      isLoading: true,
+      isLoading: false,
       setUser: vi.fn(),
       setLoading: vi.fn(),
       logout: vi.fn(),

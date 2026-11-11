@@ -74,7 +74,7 @@ describe('UploadPage', () => {
   it('renders upload form', () => {
     renderWithRouter(<UploadPage />)
 
-    expect(screen.getByText('Upload Signal')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Upload Signal' })).toBeInTheDocument()
     expect(screen.getByLabelText(/file/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /upload/i })).toBeInTheDocument()
   })
@@ -85,6 +85,16 @@ describe('UploadPage', () => {
     const fileInput = screen.getByLabelText(/file/i)
     const file = new File(['test data'], 'test.csv', { type: 'text/csv' })
     fireEvent.change(fileInput, { target: { files: [file] } })
+
+    // Fill required fields
+    const nameInput = screen.getByLabelText(/signal name/i)
+    fireEvent.change(nameInput, { target: { value: 'Test Signal' } })
+
+    const sampleRateInput = screen.getByLabelText(/sample rate/i)
+    fireEvent.change(sampleRateInput, { target: { value: '1000' } })
+
+    const durationInput = screen.getByLabelText(/duration/i)
+    fireEvent.change(durationInput, { target: { value: '10' } })
 
     const uploadButton = screen.getByRole('button', { name: /upload/i })
     fireEvent.click(uploadButton)
