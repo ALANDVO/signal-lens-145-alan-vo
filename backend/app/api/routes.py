@@ -247,6 +247,10 @@ async def analyze_signal(
     if user.role != UserRole.ADMIN and signal.owner_id != user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
+    import os
+    if not os.path.exists(signal.data_path):
+        raise HTTPException(status_code=404, detail="Signal data file not found")
+
     param_dict = json.loads(parameters) if parameters else {}
 
     from app.services.signal_analysis import analyze_signal_data

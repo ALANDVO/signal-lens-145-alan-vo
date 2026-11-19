@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "signal-lens"
-version = "1.0.0"
+version = "1.4.0"
 description = "AI/ML-powered signal analysis platform with anomaly detection"
 readme = "README.md"
 license = {text = "MIT"}
