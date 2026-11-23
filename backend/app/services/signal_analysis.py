@@ -67,8 +67,16 @@ def load_signal_data(data_path: str) -> np.ndarray:
             return df.iloc[:, 0].values.astype(np.float32)
         return df.values.astype(np.float32)
     elif data_path.endswith(".json"):
-        with open(data_path, "r") as f:
-            data = json.load(f)
+        import json
+        try:
+            with open(data_path, "r") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Unsupported file format: {str(e)}")
+        if not isinstance(data, list) or len(data) == 0:
+            raise ValueError("JSON signal data must be a non-empty array.")
+        if not all(isinstance(x, (int, float)) for x in data):
+            raise ValueError("JSON signal data must contain only numeric values.")
         return np.array(data, dtype=np.float32)
     elif data_path.endswith(".npy"):
         return np.load(data_path).astype(np.float32)
