@@ -1,4 +1,6 @@
 import numpy as np
+import statistics
+
 import pandas as pd
 from scipy import signal as scipy_signal
 from scipy.stats import entropy
@@ -19,6 +21,10 @@ def compute_statistical_features(data: np.ndarray) -> Dict[str, float]:
     if len(data) > 1:
         features["skewness"] = float(pd.Series(data).skew())
         features["kurtosis"] = float(pd.Series(data).kurtosis())
+    # Median Absolute Deviation (MAD) - robust measure of dispersion
+    if len(data) > 1:
+        mad = statistics.median([abs(x - statistics.median(data)) for x in data])
+        features["mad"] = float(mad)
 
     return features
 
