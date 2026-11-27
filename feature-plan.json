@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "current_feature": "test-fixes",
+  "current_feature": "signal-analysis-engine",
   "features": [
     {
       "id": "test-fixes",
@@ -30,13 +30,14 @@
     {
       "id": "signal-analysis-engine",
       "title": "Signal analysis domain engine with ML-based anomaly detection",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": [
         "Ingest time-series signal data via API",
         "Compute statistical features (mean, variance, spectral entropy)",
         "Isolation Forest anomaly detection on signal windows",
         "Persist analyses with UTC timestamps",
-        "Export results as JSON/CSV"
+        "Export results as JSON/CSV",
+        "Add Median Absolute Deviation (MAD) as a robust statistical feature"
       ],
       "implementation": [
         "backend/app/models/signal.py",
@@ -46,7 +47,8 @@
       ],
       "tests": [
         "backend/tests/test_signal_analysis.py",
-        "backend/tests/test_ml_anomaly.py"
+        "backend/tests/test_ml_anomaly.py",
+        "backend/tests/test_auth.py::TestSignalAnalysis::test_compute_statistical_features_mad"
       ]
     },
     {

@@ -4,7 +4,7 @@ Each round completes one feature or repair. Future items are planned, not implem
 
 ## Current round
 
-test-fixes
+signal-analysis-engine
 
 ## Roadmap
 
@@ -27,7 +27,7 @@ Tests: `frontend/src/__tests__/Upload.test.tsx`, `frontend/src/__tests__/SignalL
 
 ### signal-analysis-engine — Signal analysis domain engine with ML-based anomaly detection
 
-Status: planned
+Status: in_progress
 
 Acceptance:
 - Ingest time-series signal data via API
@@ -35,10 +35,11 @@ Acceptance:
 - Isolation Forest anomaly detection on signal windows
 - Persist analyses with UTC timestamps
 - Export results as JSON/CSV
+- Add Median Absolute Deviation (MAD) as a robust statistical feature
 
 Implementation: `backend/app/models/signal.py`, `backend/app/services/signal_analysis.py`, `backend/app/api/signals.py`, `backend/app/core/ml.py`
 
-Tests: `backend/tests/test_signal_analysis.py`, `backend/tests/test_ml_anomaly.py`
+Tests: `backend/tests/test_signal_analysis.py`, `backend/tests/test_ml_anomaly.py`, `backend/tests/test_auth.py::TestSignalAnalysis::test_compute_statistical_features_mad`
 
 ### signal-dashboard — Signal analysis dashboard with real-time visualization
 
